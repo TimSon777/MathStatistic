@@ -1,1 +1,4 @@
-Console.Write(1);
+using UI;
+
+ApplicationConfiguration.Initialize();
+Application.Run(new Form1());
