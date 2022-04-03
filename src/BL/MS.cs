@@ -1,4 +1,5 @@
 ﻿using Ardalis.GuardClauses;
+using BL.Exceptions;
 
 namespace BL;
 
@@ -20,24 +21,14 @@ public static class MS
     }
 
     public static double StandardDeviation(this double source) 
-        => System.Math.Sqrt(Guard.Against.Negative(source));
+        => Math.Sqrt(Guard.Against.Negative(source));
 
-    public static double Median(this IEnumerable<Interval> source)
-    {
-        var orderedIntervals = source.OrderBy(e => e.Count).ToArray();
-        var countElements = orderedIntervals.Sum(i => i.Count);
-        var accumulatedCount = 0;
-        var previousInterval = orderedIntervals[0];
-        foreach (var interval in orderedIntervals)
-        {
-            accumulatedCount += interval.Count;
-            
-            if (System.Math.Abs(countElements - accumulatedCount / (double) 2) < 0.001)
-            {
-                return previousInterval.Left + (.5 * countElements);
-            }
-        }
-
-        return default;
-    }
+    // public static double Median(this IEnumerable<Interval> source)
+    // {
+    //     var orderedIntervals = source.OrderBy(e => e.Count);
+    //     foreach (var interval in intervals)
+    //     {
+    //         
+    //     }
+    // }
 }
