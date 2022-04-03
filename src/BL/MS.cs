@@ -21,7 +21,7 @@ public static class MS
     }
 
     public static double StandardDeviation(this double source) 
-        => Math.Sqrt(Guard.Against.Negative(source));
+        => System.Math.Sqrt(Guard.Against.Negative(source));
 
     // public static double Median(this IEnumerable<Interval> source)
     // {
@@ -31,4 +31,15 @@ public static class MS
     //         
     //     }
     // }
+
+    //Выборочная дисперсия
+    public static double SampleVariance(this IEnumerable<Interval> source)
+    {
+        foreach (var interval in source)
+        {
+            
+        }
+
+        return 0.0;
+    }
 }

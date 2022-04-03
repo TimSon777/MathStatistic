@@ -21,4 +21,23 @@ public static class IntervalHelper
         var k = (max - min) / m;
         return k;
     }
+    
+    public static int FindCount(this IEnumerable<double> source, double start, double end) => 
+        source.Count(n => n >= start && n < end);
+
+    public static IEnumerable<Interval> GetIntervals(this IEnumerable<double> source)
+    {
+        var width = source.IntervalWidth();
+        var delta = width / 10;
+        var start = source.Min() - delta;
+        var list = new List<Interval>();
+        for (var i = 0; i < source.NumberIntervals(); i++)
+        {
+            var end = start + width;
+            list.Add(new Interval(start, end, source.FindCount(start, end)));
+            start = end;
+        }
+
+        return list;
+    }
 }
