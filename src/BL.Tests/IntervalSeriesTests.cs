@@ -13,13 +13,14 @@ public class IntervalSeriesTests
     public void Ordinary(int indexDataSet, double expectedMin, int expectedMax)
     {
         var selection = Data.Sets[indexDataSet];
-        var statistic = new Statistic(selection)
+        var statistic = Statistic
+            .CreateBy(selection)
             .WithMin()
             .WithMax()
             .WithSturgess()
             .WithIntervalWidth()
             .WithIntervals();
-        
+
         Assert.Equal(expectedMin, statistic.Min);
         Assert.Equal(expectedMax, statistic.Max);
         Assert.Equal(selection.Count, statistic.Intervals.Sum(interval => interval.Frequency));

@@ -18,13 +18,18 @@ public class Statistic
     public int PreCountIntervals { get; set; }
     public double Variance { get; set; }
 
-    public Statistic(IReadOnlyCollection<double> selection)
+    private Statistic(IReadOnlyCollection<double> selection)
     {
         OrderedSelection = selection
             .OrderBy(e => e)
             .ToArray();
         
         ElementsCount = selection.Count;
+    }
+
+    public static Statistic CreateBy(IReadOnlyCollection<double> selection)
+    {
+        return new Statistic(selection);
     }
 
     public Statistic WithMin()

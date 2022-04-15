@@ -12,7 +12,8 @@ public class SampleParametersTests
     public void Ordinary_Mean(int indexDataSet, double expectedMinAverage, double expectedMaxAverage)
     {
         var selection = Data.Sets[indexDataSet];
-        var statistic = new Statistic(selection)
+        var statistic = Statistic
+            .CreateBy(selection)
             .WithMin()
             .WithMax()
             .WithSturgess()
@@ -29,7 +30,8 @@ public class SampleParametersTests
     public void Ordinary_VarianceAndStandardDeviation(int indexDataSet, double expectedMinVariance, double expectedMaxVariance)
     {
         var selection = Data.Sets[indexDataSet];
-        var statistic = new Statistic(selection)
+        var statistic = Statistic
+            .CreateBy(selection)
             .WithMin()
             .WithMax()
             .WithSturgess()
