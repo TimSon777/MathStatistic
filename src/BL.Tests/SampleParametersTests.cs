@@ -9,7 +9,7 @@ public class SampleParametersTests
     [Theory]
     [InlineData(0, 4, 5)]
     [InlineData(1, 35, 45)]
-    public void Ordinary_Mean(int indexDataSet, double expectedMinAverage, double expectedMaxAverage)
+    public void Ordinary_Mean(int indexDataSet, double expectedMinMean, double expectedMaxMean)
     {
         var selection = Data.Sets[indexDataSet];
         var statistic = Statistic
@@ -21,7 +21,7 @@ public class SampleParametersTests
             .WithIntervals()
             .WithMean();
         
-        Assert.True(expectedMinAverage < statistic.Mean && statistic.Mean < expectedMaxAverage);
+        Assert.True(statistic.Mean.Between(expectedMinMean, expectedMaxMean));
     }
     
     [Theory]

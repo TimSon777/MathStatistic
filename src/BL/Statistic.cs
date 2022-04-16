@@ -17,13 +17,14 @@ public class Statistic
     public double IntervalWidth { get; set; }
     public int PreCountIntervals { get; set; }
     public double Variance { get; set; }
+    public double Mode { get; private set; }
 
     private Statistic(IReadOnlyCollection<double> selection)
     {
         OrderedSelection = selection
             .OrderBy(e => e)
             .ToArray();
-        
+
         ElementsCount = selection.Count;
     }
 
@@ -37,7 +38,7 @@ public class Statistic
         Min = OrderedSelection.Min();
         return this;
     }
-    
+
     public Statistic WithMax()
     {
         Max = OrderedSelection.Max();
@@ -46,8 +47,8 @@ public class Statistic
 
     public Statistic WithSturgess()
     {
-        var numberIntervals = 1 + 3.322 * Math.Log10(ElementsCount);
-        PreCountIntervals = (int) Math.Ceiling(numberIntervals);
+        var numberIntervals = 1 + 3.322 * Log10(ElementsCount);
+        PreCountIntervals = (int) Ceiling(numberIntervals);
         return this;
     }
 
@@ -66,22 +67,22 @@ public class Statistic
         {
             var end = start + IntervalWidth;
             var frequency = 0;
-            
+
             while (OrderedSelection[j] >= start && OrderedSelection[j] < end)
             {
                 frequency++;
                 j++;
-                
+
                 if (j == ElementsCount)
                 {
                     break;
                 }
             }
-            
+
             list.Add(new Interval(start, end, frequency));
             start = end;
         } while (start <= Max && j < ElementsCount);
-        
+
         Intervals = list;
         return this;
     }
@@ -94,13 +95,65 @@ public class Statistic
 
     public Statistic WithVariance()
     {
-        Variance = Intervals.Sum(interval => (interval.Middle - Mean).Sqr() * interval.Frequency) / OrderedSelection.Length;
+        Variance = Intervals.Sum(interval => (interval.Middle - Mean).Sqr() * interval.Frequency) /
+                   OrderedSelection.Length;
         return this;
     }
 
     public Statistic WithStandardDeviation()
     {
         StandardDeviation = Sqrt(Variance);
+        return this;
+    }
+
+    public Statistic WithMode()
+    {
+        var startIndexOfMaxFrequency = 0;
+        var maxFrequency = Intervals.First().Frequency;
+        var maxFrequencies = new List<Interval>();
+
+        for (var i = 0; i < Intervals.Count; i++)
+        {
+            var interval = Intervals.ElementAt(i);
+            var frequency = interval.Frequency;
+
+            if (frequency == maxFrequency)
+            {
+                maxFrequencies.Add(interval);
+            }
+            else if (frequency > maxFrequency)
+            {
+                maxFrequencies = new List<Interval> {interval};
+                maxFrequency = frequency;
+                startIndexOfMaxFrequency = i;
+            }
+        }
+
+        var endIndexOfMaxFrequency = startIndexOfMaxFrequency + maxFrequencies.Count - 1;
+
+        Interval Accumulate(Interval v1, Interval v2) => v1 + v2;
+
+        var previousIntervals = maxFrequencies.Count >= startIndexOfMaxFrequency
+            ? Intervals
+                .Take(startIndexOfMaxFrequency)
+            : Intervals
+                .Take(startIndexOfMaxFrequency)
+                .TakeLast(maxFrequencies.Count);
+
+        var previousInterval = Interval.Sum(previousIntervals);
+
+        var nextIntervals = maxFrequencies.Count > Intervals.Count - endIndexOfMaxFrequency
+            ? Intervals.Skip(endIndexOfMaxFrequency + 1)
+            : Intervals.Skip(endIndexOfMaxFrequency + 1)
+                .Take(maxFrequencies.Count);
+        
+        var nextInterval = Interval.Sum(nextIntervals);
+
+        var modeInterval = Interval.Sum(maxFrequencies);
+
+        Mode = modeInterval.Left + (modeInterval.Frequency - previousInterval.Frequency) / (double)
+            (2 * modeInterval.Frequency - previousInterval.Frequency - nextInterval.Frequency) * modeInterval.Length;
+
         return this;
     }
 }
