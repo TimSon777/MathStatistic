@@ -8,7 +8,8 @@ partial class DataForm
 {
     private IContainer components = null;
     
-    private const string TextBox_WriteData = nameof(TextBox_WriteData);
+    private const string TB_WriteData = nameof(TB_WriteData);
+    private const string TB_Message = nameof(TB_Message);
     private const string TB_Result = nameof(TB_Result);
     
     protected override void Dispose(bool disposing)
@@ -35,15 +36,27 @@ partial class DataForm
     private void CreateTextBoxToWriteSelection()
     { 
         var location = new Point(5, 58);
+        var enterDataTextBox = new TextBox
+        {
+            ReadOnly = true,
+            Text = "Enter data by space or dot...",
+            Name = TB_Message,
+            Location = new Point(100, 50),
+            Size = new Size(1000,100),
+            Font = Constants.MicrosoftSansSerif(12),
+        };
+        
+        Controls.Add(enterDataTextBox);
+        
         var textBox = new TextBox
         {
-            Name = TextBox_WriteData,
-            Location = new Point(100, 61),
-            Size = new Size(1000, 400),
+            Name = TB_WriteData,
+            Location = new Point(100, 80 + Constants.DefaultMargin),
+            Size = Constants.TextBoxDefaultSize,
             Font = Constants.MicrosoftSansSerif(),
             MaxLength = int.MaxValue,
             ScrollBars = ScrollBars.Vertical,
-            Multiline = true
+            Multiline = true,
         };
 
         Controls.Add(textBox);
@@ -52,7 +65,7 @@ partial class DataForm
         {
             Text = "Send data",
             Name = "Btn Send data",
-            Location = new Point(450, 469),
+            Location = new Point(450, 290 + Constants.DefaultMargin),
             Size = Constants.ButtonSize,
             Font = Constants.MicrosoftSansSerif()
         };
@@ -64,7 +77,7 @@ partial class DataForm
 
     private void SendDataAndDisplayResult(object sender, EventArgs eventArgs)
     {
-        var textBox = Controls[TextBox_WriteData] as TextBox;
+        var textBox = Controls[TB_WriteData] as TextBox;
         var numbersInString = textBox.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
         var numbers = new List<double>();
         
@@ -93,7 +106,7 @@ partial class DataForm
         var result = new TextBox
         {
             Name = TB_Result,
-            Location = new Point(300, 527),
+            Location = new Point(100, 350 + Constants.DefaultMargin),
             Size = Constants.TextBoxDefaultSize,
             BorderStyle = BorderStyle.FixedSingle,
             Font = Constants.MicrosoftSansSerif(),

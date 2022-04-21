@@ -21,12 +21,11 @@ partial class MainForm
     {
         components = new System.ComponentModel.Container();
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(Constants.ButtonSize.Width * 3 + Constants.DefaultMargin * 4, Constants.ButtonSize.Height + Constants.DefaultMargin * 2);
+        ClientSize = new Size(Constants.ButtonSize.Width * 2 + Constants.DefaultMargin * 3, Constants.ButtonSize.Height + Constants.DefaultMargin * 2);
         Text = "Descriptive statistics";
         AutoScroll = true;
         CreateButtonToOpenDataForm(Constants.DefaultMargin);
         CreateButtonToOpenHttpForm(Constants.DefaultMargin + Constants.ButtonSize.Width);
-        CreateButtonToOpenHttpForm(Constants.DefaultMargin + Constants.ButtonSize.Width * 2);
     }
 
     private void CreateButtonToOpenDataForm(int leftMargin)

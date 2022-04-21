@@ -9,7 +9,7 @@ public static class Constants
 
     public static readonly Size FormDefaultSize = new(1200, 800);
 
-    public static readonly Size TextBoxDefaultSize = new(600, 300);
+    public static readonly Size TextBoxDefaultSize = new(1000, 200);
     
     public const int DefaultMargin = 3;
 }
