@@ -23,10 +23,11 @@ partial class DataForm
     
     private void InitializeComponent()
     {
-        this.components = new System.ComponentModel.Container();
-        this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        this.ClientSize = Constants.FormDefaultSize;
-        this.Text = "DataForm";
+        components = new System.ComponentModel.Container();
+        AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+        ClientSize = Constants.FormDefaultSize;
+        Text = "DataForm";
+        AutoScroll = true;
         CreateTextBoxToWriteSelection();
         CreateResultTextBox();
     }
@@ -50,7 +51,6 @@ partial class DataForm
             Multiline = true
         };
 
-        textBox.KeyPress += KeyPressWithDigitsAndComma;
         Controls.Add(textBox);
 
         var button = new Button
@@ -77,7 +77,7 @@ partial class DataForm
 
         foreach (var e in numbersInString)
         {
-            var isOk = double.TryParse(e, NumberStyles.Any, CultureInfo.InvariantCulture, out var number);
+            var isOk = double.TryParse(e, out var number);
             if (!isOk)
             {
                 label.Text = $"Error with number: {e}";
@@ -91,9 +91,7 @@ partial class DataForm
 
         var statistic = Statistic.WithAllParams(numbers);
         label.Text = statistic.WriteAsText();
-        CreatePictureBox(statistic);
     }
-    
     
     private void CreateResultTextBox()
     {
@@ -110,43 +108,5 @@ partial class DataForm
         };
         
         Controls.Add(result);
-    }
-
-    private void KeyPressWithDigitsAndComma(object sender, KeyPressEventArgs args)
-    {
-        args.Handled = !Char.IsDigit(args.KeyChar) && args.KeyChar != ',' && args.KeyChar != ' ' && args.KeyChar != '.';
-    }
-    
-    
-    private void CreatePictureBox(Statistic statistic)
-    {
-        var pictureBox = new PictureBox()
-        {
-            Name = "1",
-            Location = new Point(300, 1000),
-            Size = new Size(600, 600),
-            BorderStyle = BorderStyle.FixedSingle
-        };
-
-        pictureBox.Paint += (sender, args) =>
-        {
-            var graphics = pictureBox.CreateGraphics();
-            var pen = new Pen(Color.Black, 10F);
-
-            foreach (var interval in statistic.Intervals)
-            {
-                var divider = statistic.Max - statistic.Min + 0.01;
-                var height = (float) interval.GetRelativeFrequency(statistic.ElementsCount) * 1000;
-                var leftDown = new PointF((float) (interval.Left / divider) * 1000, 0);
-                var leftUp = new PointF((float) (interval.Left / divider) * 1000, height);
-                var rightUp = new PointF((float) (interval.Right / divider) * 1000, height);
-                var rightDown = new PointF((float) (interval.Right / divider) * 1000, 0);
-                graphics.DrawLine(pen, leftDown, leftUp);
-                graphics.DrawLine(pen, leftUp, rightUp);
-                graphics.DrawLine(pen, rightUp, rightDown);
-            }
-        };
-        
-        Controls.Add(pictureBox);
     }
 }

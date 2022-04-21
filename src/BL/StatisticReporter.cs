@@ -23,6 +23,6 @@ public static class StatisticReporter
                $"Standard Deviation: {statistic.StandardDeviation}{Environment.NewLine}" +
                $"Mode: {statistic.Mode}{Environment.NewLine}" +
                $"Asymmetry Coefficient: {statistic.AsymmetryCoefficient}{Environment.NewLine}" +
-               $"Kurtosis Coefficient{statistic.KurtosisCoefficient}{Environment.NewLine}";
+               $"Kurtosis Coefficient: {statistic.KurtosisCoefficient}{Environment.NewLine}";
     }
 }
