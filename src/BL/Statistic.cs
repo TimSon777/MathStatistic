@@ -190,33 +190,27 @@ public class Statistic
         return this;
     }
 
-    //TODO
+    private double WithCentralMoment(int order) => 
+        Intervals.Sum(interval => (interval.Middle - Mean).Pow(order) * interval.Frequency);
+    
     public Statistic WithAsymmetryCoefficient()
     {
-        AsymmetryCoefficient = 0;
+        AsymmetryCoefficient = WithCentralMoment(3) / StandardDeviation.Cub();
         return this;
     }
 
-    //TODO
     public Statistic WithKurtosisCoefficient()
     {
-        KurtosisCoefficient = 0;
+        KurtosisCoefficient = WithCentralMoment(4) / Variance.Sqr() - 3;
         return this;
     }
 
-    //TODO
-    public Statistic WithConfidenceIntervalGeneralMean(double probability = 0.05)
+    public double WithConfidenceCoefficient(double probability)
     {
-        GeneralMean = new ConfidenceInterval(0, 0, probability);
-        return this;
+        
+        return 0;
     }
     
-    //TODO
-    public Statistic WithConfidenceIntervalGeneralVariance(double probability = 0.05)
-    {
-        GeneralVariance = new ConfidenceInterval(0, 0, probability);
-        return this;
-    }
 
     public static Statistic WithAllParams(IReadOnlyCollection<double> selection)
     {
@@ -232,8 +226,6 @@ public class Statistic
             .WithMode()
             .WithMedian()
             .WithKurtosisCoefficient()
-            .WithAsymmetryCoefficient()
-            .WithConfidenceIntervalGeneralMean()
-            .WithConfidenceIntervalGeneralVariance();
+            .WithAsymmetryCoefficient();
     }
 }
