@@ -33,12 +33,7 @@ partial class DataForm
     }
     
     private void CreateTextBoxToWriteSelection()
-    {
-        if (Controls.ContainsKey(TextBox_WriteData))
-        {
-            return;
-        }
-
+    { 
         var location = new Point(5, 58);
         var textBox = new TextBox
         {
@@ -57,7 +52,7 @@ partial class DataForm
         {
             Text = "Send data",
             Name = "Btn Send data",
-            Location = new Point(450, 467),
+            Location = new Point(450, 469),
             Size = Constants.ButtonSize,
             Font = Constants.MicrosoftSansSerif()
         };
@@ -98,8 +93,8 @@ partial class DataForm
         var result = new TextBox
         {
             Name = TB_Result,
-            Location = new Point(300, 540),
-            Size = new Size(600, 300),
+            Location = new Point(300, 527),
+            Size = Constants.TextBoxDefaultSize,
             BorderStyle = BorderStyle.FixedSingle,
             Font = Constants.MicrosoftSansSerif(),
             ScrollBars = ScrollBars.Vertical,
