@@ -194,7 +194,7 @@ public class Statistic
     }
 
     private double WithCentralMoment(int order) => 
-        Intervals.Sum(interval => (interval.Middle - Mean).Pow(order) * interval.Frequency);
+        Intervals.Sum(interval => (interval.Middle - Mean).Pow(order) * interval.GetRelativeFrequency(ElementsCount));
     
     public Statistic WithAsymmetryCoefficient()
     {
