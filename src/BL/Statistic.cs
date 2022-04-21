@@ -57,6 +57,11 @@ public class Statistic
 
     public Statistic WithIntervalWidth()
     {
+        if (Abs(Min - Max) < .000001)
+        {
+            Min -= .0000001;
+        }
+        
         IntervalWidth = (Max - Min) / PreCountIntervals;
         return this;
     }
@@ -193,13 +198,20 @@ public class Statistic
     
     public Statistic WithAsymmetryCoefficient()
     {
-        AsymmetryCoefficient = WithCentralMoment(3) / StandardDeviation.Cub();
+        var standardDeviationCub = StandardDeviation.Cub();
+        AsymmetryCoefficient = standardDeviationCub != 0 
+            ?  WithCentralMoment(3) / StandardDeviation.Cub()
+            : 0;
         return this;
     }
 
     public Statistic WithKurtosisCoefficient()
     {
-        KurtosisCoefficient = WithCentralMoment(4) / Variance.Sqr() - 3;
+        var varianceSqr = Variance.Sqr();
+        KurtosisCoefficient = varianceSqr != 0 
+            ? WithCentralMoment(4) / Variance.Sqr() - 3 
+            : 0;
+        
         return this;
     }
 
