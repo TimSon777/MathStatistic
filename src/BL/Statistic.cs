@@ -21,8 +21,6 @@ public class Statistic
     public double Median { get; private set; }
     public double AsymmetryCoefficient { get; private set; }
     public double KurtosisCoefficient { get; private set; }
-    public ConfidenceInterval GeneralMean { get; private set; }
-    public ConfidenceInterval GeneralVariance { get; private set; }
 
     private Statistic(IReadOnlyCollection<double> selection)
     {
@@ -204,13 +202,6 @@ public class Statistic
         KurtosisCoefficient = WithCentralMoment(4) / Variance.Sqr() - 3;
         return this;
     }
-
-    public double WithConfidenceCoefficient(double probability)
-    {
-        
-        return 0;
-    }
-    
 
     public static Statistic WithAllParams(IReadOnlyCollection<double> selection)
     {

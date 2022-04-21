@@ -16,152 +16,57 @@ partial class HomeForm
 
         base.Dispose(disposing);
     }
-
+    
     private void InitializeComponent()
     {
-        this.components = new System.ComponentModel.Container();
-        this.AutoScaleMode = AutoScaleMode.Font;
-        this.ClientSize = new Size(1200, 1000);
-        this.Text = "Descriptive statistics";
+        components = new System.ComponentModel.Container();
+        AutoScaleMode = AutoScaleMode.Font;
+        ClientSize = new Size(Constants.ButtonSize.Width * 3 + Constants.DefaultMargin * 4, Constants.ButtonSize.Height + Constants.DefaultMargin * 2);
+        Text = "Descriptive statistics";
         AutoScroll = true;
-        CreateButtonToOpenTextBox();
-        CreateResultTextBox();
+        CreateButtonToOpenDataForm(Constants.DefaultMargin);
+        CreateButtonToOpenHttpForm(Constants.DefaultMargin + Constants.ButtonSize.Width);
+        CreateButtonToOpenHttpForm(Constants.DefaultMargin + Constants.ButtonSize.Width * 2);
     }
 
-    private void CreateButtonToOpenTextBox()
+    private void CreateButtonToOpenDataForm(int leftMargin)
     {
         var button = new Button
         {
-            Text = "Enter data",
-            Name = "Btn Enter data",
-            Location = new Point(3, 3),
+            Text = "Open form to enter data",
+            Name = "Btn Open form to enter data",
+            Location = new Point(leftMargin, Constants.DefaultMargin),
             Size = Constants.ButtonSize,
             Font = Constants.MicrosoftSansSerif()
         };
 
-        button.Click += CreateTextBoxToWriteSelection;
+        button.Click += OpenFormToWriteData;
         Controls.Add(button);
     }
-
-    private const string TextBox_WriteData = nameof(TextBox_WriteData);
-    private const string TB_Result = nameof(TB_Result);
     
-    private void CreateTextBoxToWriteSelection(object sender, EventArgs e)
+    private void CreateButtonToOpenHttpForm(int leftMargin)
     {
-        if (Controls.ContainsKey(TextBox_WriteData))
-        {
-            return;
-        }
-
-        var location = new Point(5, 58);
-        var textBox = new TextBox
-        {
-            Name = TextBox_WriteData,
-            Location = new Point(100, 61),
-            Size = new Size(1000, 400),
-            Font = Constants.MicrosoftSansSerif(),
-            MaxLength = int.MaxValue,
-            ScrollBars = ScrollBars.Vertical,
-            Multiline = true
-        };
-
-        textBox.KeyPress += KeyPressWithDigitsAndComma;
-        Controls.Add(textBox);
-
         var button = new Button
         {
-            Text = "Send data",
-            Name = "Btn Send data",
-            Location = new Point(450, 467),
+            Text = "Open form to get data from the Internet",
+            Name = "Btn Open form to get data from the Internet",
+            Location = new Point(leftMargin, Constants.DefaultMargin),
             Size = Constants.ButtonSize,
             Font = Constants.MicrosoftSansSerif()
         };
 
-        button.Click += SendDataAndDisplayResult;
-        
+        button.Click += OpenFormToGetDataFromInternet;
         Controls.Add(button);
     }
 
-    private void SendDataAndDisplayResult(object sender, EventArgs eventArgs)
+    private void OpenFormToWriteData(object sender, EventArgs e)
     {
-        var textBox = Controls[TextBox_WriteData] as TextBox;
-        var numbersInString = textBox.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        var numbers = new List<double>();
-        
-        var label = Controls[TB_Result] as TextBox;
-
-        foreach (var e in numbersInString)
-        {
-            var isOk = double.TryParse(e, NumberStyles.Any, CultureInfo.InvariantCulture, out var number);
-            if (!isOk)
-            {
-                label.Text = $"Error with number: {e}";
-                return;
-            }
-            else
-            {
-                numbers.Add(number);
-            }
-        }
-
-        var statistic = Statistic.WithAllParams(numbers);
-        label.Text = statistic.WriteAsText();
-        CreatePictureBox(statistic);
+        new DataForm().Show();
     }
     
     
-    private void CreateResultTextBox()
+    private void OpenFormToGetDataFromInternet(object sender, EventArgs e)
     {
-        var result = new TextBox
-        {
-            Name = TB_Result,
-            Location = new Point(300, 540),
-            Size = new Size(600, 300),
-            BorderStyle = BorderStyle.FixedSingle,
-            Font = Constants.MicrosoftSansSerif(),
-            ScrollBars = ScrollBars.Vertical,
-            ReadOnly = true,
-            Multiline = true
-        };
-        
-        Controls.Add(result);
-    }
-
-    private void KeyPressWithDigitsAndComma(object sender, KeyPressEventArgs args)
-    {
-        args.Handled = !Char.IsDigit(args.KeyChar) && args.KeyChar != ',' && args.KeyChar != ' ' && args.KeyChar != '.';
-    }
-    
-    
-    private void CreatePictureBox(Statistic statistic)
-    {
-        var pictureBox = new PictureBox()
-        {
-            Name = "1",
-            Location = new Point(300, 1000),
-            Size = new Size(600, 600),
-            BorderStyle = BorderStyle.FixedSingle
-        };
-
-        pictureBox.Paint += (sender, args) =>
-        {
-            var graphics = pictureBox.CreateGraphics();
-            var pen = new Pen(Color.Black, 10F);
-
-            foreach (var interval in statistic.Intervals)
-            {
-                var divider = statistic.Max - statistic.Min + 0.01;
-                var height = (float) interval.GetRelativeFrequency(statistic.ElementsCount) * 1000;
-                var leftDown = new PointF((float) (interval.Left / divider) * 1000, 0);
-                var leftUp = new PointF((float) (interval.Left / divider) * 1000, height);
-                var rightUp = new PointF((float) (interval.Right / divider) * 1000, height);
-                var rightDown = new PointF((float) (interval.Right / divider) * 1000, 0);
-                graphics.DrawLine(pen, leftDown, leftUp);
-                graphics.DrawLine(pen, leftUp, rightUp);
-                graphics.DrawLine(pen, rightUp, rightDown);
-            }
-        };
-        
-        Controls.Add(pictureBox);
+        new DataForm().Show();
     }
 }

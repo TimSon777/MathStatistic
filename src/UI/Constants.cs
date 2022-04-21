@@ -6,4 +6,8 @@ public static class Constants
         => new("Microsoft Sans Serif", fontSize);
 
     public static readonly Size ButtonSize = new(300, 50);
+
+    public static readonly Size FormDefaultSize = new(1500, 800);
+    
+    public const int DefaultMargin = 3;
 }
