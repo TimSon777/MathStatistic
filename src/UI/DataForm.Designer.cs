@@ -39,11 +39,12 @@ partial class DataForm
         var enterDataTextBox = new TextBox
         {
             ReadOnly = true,
-            Text = "Enter data by space or dot...",
+            Text = "Enter data with separator dot...",
             Name = TB_Message,
             Location = new Point(100, 50),
             Size = new Size(1000,100),
             Font = Constants.MicrosoftSansSerif(12),
+            BorderStyle = BorderStyle.None
         };
         
         Controls.Add(enterDataTextBox);
