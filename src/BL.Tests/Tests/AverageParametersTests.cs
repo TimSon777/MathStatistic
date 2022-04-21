@@ -1,7 +1,7 @@
 ﻿using BL;
 using Xunit;
 
-namespace Tests;
+namespace Tests.Tests;
 
 public class AverageParametersTests
 {
@@ -21,5 +21,23 @@ public class AverageParametersTests
             .WithMode();
         
         Assert.True(statistic.Mode.Between(expectedMinMode, expectedMaxMode));
+    }
+    
+    [Theory]
+    [InlineData(0, 4, 5)]
+    [InlineData(1, 43, 48)]
+    public void Ordinary_Median(int indexDataSet, double expectedMinMedian, double expectedMaxMedian)
+    {
+        var selection = Data.Sets[indexDataSet];
+        var statistic = Statistic
+            .CreateBy(selection)
+            .WithMin()
+            .WithMax()
+            .WithSturgess()
+            .WithIntervalWidth()
+            .WithIntervals()
+            .WithMedian();
+        
+        Assert.True(statistic.Median.Between(expectedMinMedian, expectedMaxMedian));
     }
 }

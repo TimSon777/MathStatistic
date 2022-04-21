@@ -1,8 +1,8 @@
-﻿using static System.Math;
-using BL;
+﻿using BL;
 using Xunit;
+using static System.Math;
 
-namespace Tests;
+namespace Tests.Tests;
 
 public class SampleParametersTests
 {

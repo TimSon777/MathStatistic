@@ -1,9 +1,8 @@
-using System.Collections.Generic;
 using System.Linq;
 using BL;
 using Xunit;
 
-namespace Tests;
+namespace Tests.Tests;
 
 public class IntervalSeriesTests
 {

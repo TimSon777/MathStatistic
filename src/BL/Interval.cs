@@ -7,6 +7,9 @@ public record Interval(double Left, double Right, int Frequency)
 
     public static Interval Default => new(0, 0, 0);
 
+    public double GetRelativeFrequency(int countElements)
+        => Frequency / (double) countElements;
+
     public static Interval operator +(Interval a, Interval b)
     {
         var left = Math.Min(a.Left, b.Left);
@@ -31,5 +34,10 @@ public record Interval(double Left, double Right, int Frequency)
         }
 
         return result ?? Default;
+    }
+
+    public override string ToString()
+    {
+        return $"{Left}-{Right} with {nameof(Frequency)}: {Frequency}";
     }
 };
