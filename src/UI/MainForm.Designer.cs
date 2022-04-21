@@ -3,7 +3,7 @@ using BL;
 
 namespace UI;
 
-partial class HomeForm
+partial class MainForm
 {
     private System.ComponentModel.IContainer components = null;
 
@@ -66,6 +66,6 @@ partial class HomeForm
     
     private void OpenFormToGetDataFromInternet(object sender, EventArgs e)
     {
-        new DataForm().Show();
+        new HttpForm().Show();
     }
 }

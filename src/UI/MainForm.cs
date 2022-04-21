@@ -1,8 +1,8 @@
 namespace UI;
 
-public partial class HomeForm : Form
+public partial class MainForm : Form
 {
-    public HomeForm()
+    public MainForm()
     {
         InitializeComponent();
     }
