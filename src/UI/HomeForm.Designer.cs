@@ -64,7 +64,6 @@ partial class HomeForm
         new DataForm().Show();
     }
     
-    
     private void OpenFormToGetDataFromInternet(object sender, EventArgs e)
     {
         new DataForm().Show();
