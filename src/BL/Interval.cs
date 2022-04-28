@@ -38,6 +38,7 @@ public record Interval(double Left, double Right, int Frequency)
 
     public override string ToString()
     {
-        return $"{Left}-{Right} with {nameof(Frequency)}: {Frequency}";
+       // return $"{Left}-{Right} with {nameof(Frequency)}: {Frequency}";
+       return $"{Math.Round(Left, 2)}-{Math.Round(Right, 2)}";
     }
 };

@@ -4,7 +4,7 @@ namespace BL;
 
 public static class StatisticReporter
 {
-    public static string WriteConclusionAsText(this Statistic statistic)
+    public static List<string> WriteConclusionAsText(this Statistic statistic)
     {
         var asymmetryCoefficientConclusion = new StringBuilder();
         switch (statistic.AsymmetryCoefficient)
@@ -34,6 +34,9 @@ public static class StatisticReporter
                 break;
         }
 
-        return asymmetryCoefficientConclusion + kurtosisCoefficientConclusion.ToString();
+        var result = new List<string>();
+        result.Add(asymmetryCoefficientConclusion.ToString());
+        result.Add(kurtosisCoefficientConclusion.ToString());
+        return result;
     }
 }

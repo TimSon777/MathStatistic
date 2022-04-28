@@ -1,4 +1,5 @@
 using ElectronNET.API;
+using ElectronNET.API.Entities;
 using Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +29,13 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-Task.Run(async () => await Electron.WindowManager.CreateWindowAsync());
+//Task.Run(async () => await Electron.WindowManager.CreateWindowAsync());
+//var display = await Electron.Screen.GetPrimaryDisplayAsync();
+
+/*await Task.Run(async () => await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions
+{
+    Width = display.Size.Width,
+    Height = display.Size.Height
+}));*/
 
 app.Run();
