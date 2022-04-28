@@ -11,14 +11,7 @@ public class AverageParametersTests
     public void Ordinary_Mode(int indexDataSet, double expectedMinMode, double expectedMaxMode)
     {
         var selection = Data.Sets[indexDataSet];
-        var statistic = Statistic
-            .CreateBy(selection)
-            .WithMin()
-            .WithMax()
-            .WithSturgess()
-            .WithIntervalWidth()
-            .WithIntervals()
-            .WithMode();
+        var statistic = Statistic.WithAllParams(selection);
         
         Assert.True(statistic.Mode.Between(expectedMinMode, expectedMaxMode));
     }
@@ -29,14 +22,7 @@ public class AverageParametersTests
     public void Ordinary_Median(int indexDataSet, double expectedMinMedian, double expectedMaxMedian)
     {
         var selection = Data.Sets[indexDataSet];
-        var statistic = Statistic
-            .CreateBy(selection)
-            .WithMin()
-            .WithMax()
-            .WithSturgess()
-            .WithIntervalWidth()
-            .WithIntervals()
-            .WithMedian();
+        var statistic = Statistic.WithAllParams(selection);
         
         Assert.True(statistic.Median.Between(expectedMinMedian, expectedMaxMedian));
     }

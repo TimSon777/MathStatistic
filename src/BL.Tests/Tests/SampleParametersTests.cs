@@ -12,34 +12,18 @@ public class SampleParametersTests
     public void Ordinary_Mean(int indexDataSet, double expectedMinMean, double expectedMaxMean)
     {
         var selection = Data.Sets[indexDataSet];
-        var statistic = Statistic
-            .CreateBy(selection)
-            .WithMin()
-            .WithMax()
-            .WithSturgess()
-            .WithIntervalWidth()
-            .WithIntervals()
-            .WithMean();
+        var statistic = Statistic.WithAllParams(selection);
         
         Assert.True(statistic.Mean.Between(expectedMinMean, expectedMaxMean));
     }
-    
+
     [Theory]
     [InlineData(0, 7, 9)]
     [InlineData(1, 400, 500)]
     public void Ordinary_VarianceAndStandardDeviation(int indexDataSet, double expectedMinVariance, double expectedMaxVariance)
     {
         var selection = Data.Sets[indexDataSet];
-        var statistic = Statistic
-            .CreateBy(selection)
-            .WithMin()
-            .WithMax()
-            .WithSturgess()
-            .WithIntervalWidth()
-            .WithIntervals()
-            .WithMean()
-            .WithVariance()
-            .WithStandardDeviation();
+        var statistic = Statistic.WithAllParams(selection);
         
         Assert.True(statistic.Variance.Between(expectedMinVariance, expectedMaxVariance));
         Assert.True(statistic.StandardDeviation.Between(Sqrt(expectedMinVariance), Sqrt(expectedMaxVariance)));

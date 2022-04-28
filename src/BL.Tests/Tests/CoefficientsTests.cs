@@ -10,8 +10,7 @@ public class CoefficientsTests
     public void Ordinary_KurtosisCoefficient(int indexDataSet, double expectedMinOrdinaryGeneralKurtosisCoefficient, double expectedMaxOrdinaryGeneralKurtosisCoefficient)
     {
         var selection = Data.Sets[indexDataSet];
-        var statistic = Statistic
-            .WithAllParams(selection);
+        var statistic = Statistic.WithAllParams(selection);
         
         Assert.True(statistic.KurtosisCoefficient
             .Between(expectedMinOrdinaryGeneralKurtosisCoefficient, expectedMaxOrdinaryGeneralKurtosisCoefficient));
@@ -22,8 +21,7 @@ public class CoefficientsTests
     public void Ordinary_AsymmetryCoefficient(int indexDataSet, double expectedMinOrdinaryGeneralAsymmetryCoefficient, double expectedMaxOrdinaryGeneralAsymmetryCoefficient)
     {
         var selection = Data.Sets[indexDataSet];
-        var statistic = Statistic
-            .WithAllParams(selection);
+        var statistic = Statistic.WithAllParams(selection);
         
         Assert.True(statistic.AsymmetryCoefficient
             .Between(expectedMinOrdinaryGeneralAsymmetryCoefficient, expectedMaxOrdinaryGeneralAsymmetryCoefficient));

@@ -1,4 +1,5 @@
 ﻿using static System.Math;
+using MathNet.Numerics.Distributions;
 
 namespace BL;
 
@@ -21,6 +22,9 @@ public class Statistic
     public double Median { get; private set; }
     public double AsymmetryCoefficient { get; private set; }
     public double KurtosisCoefficient { get; private set; }
+    public ConfidenceInterval GeneralMean { get; private set; }
+    public ConfidenceInterval GeneralStandardDeviation { get; private set; }
+    private int DegreesFreedomCount => ElementsCount - 1;
 
     private Statistic(IReadOnlyCollection<double> selection)
     {
@@ -38,13 +42,13 @@ public class Statistic
 
     public Statistic WithMin()
     {
-        Min = OrderedSelection.Min();
+        Min = OrderedSelection.First();
         return this;
     }
 
     public Statistic WithMax()
     {
-        Max = OrderedSelection.Max();
+        Max = OrderedSelection.Last();
         return this;
     }
 
@@ -61,14 +65,14 @@ public class Statistic
         {
             Min -= .0000001;
         }
-        
+
         IntervalWidth = (Max - Min) / PreCountIntervals;
         return this;
     }
 
-    public Statistic WithIntervals(int delta = 10)
+    public Statistic WithIntervals(double delta = .00001)
     {
-        var start = Min - IntervalWidth / delta;
+        var start = Min - delta;
         var j = 0;
         var list = new List<Interval>();
         do
@@ -154,7 +158,7 @@ public class Statistic
             : Intervals
                 .Skip(endIndexOfMaxFrequency + 1)
                 .Take(maxFrequencies.Count);
-        
+
         var nextIntervalFrequency = nextIntervals.Sum(interval => interval.Frequency);
 
         var modeInterval = Interval.Sum(maxFrequencies);
@@ -178,29 +182,30 @@ public class Statistic
                 second = e;
                 break;
             }
+
             first = e;
             accumulatedFrequency += e.Frequency;
         }
 
         var interval = Abs(accumulatedFrequency - maxAccumulatedFrequency) < 0.00001
-            ? first + second 
+            ? first + second
             : first;
 
         var accumulatedFrequencyPrevious = accumulatedFrequency - interval.Frequency;
-        Median = interval.Left + (OrderedSelection.Length * 0.5 - accumulatedFrequencyPrevious) * 
+        Median = interval.Left + (OrderedSelection.Length * 0.5 - accumulatedFrequencyPrevious) *
             interval.Length / interval.Frequency;
 
         return this;
     }
 
-    private double WithCentralMoment(int order) => 
+    private double WithCentralMoment(int order) =>
         Intervals.Sum(interval => (interval.Middle - Mean).Pow(order) * interval.GetRelativeFrequency(ElementsCount));
-    
+
     public Statistic WithAsymmetryCoefficient()
     {
         var standardDeviationCub = StandardDeviation.Cub();
-        AsymmetryCoefficient = standardDeviationCub != 0 
-            ?  WithCentralMoment(3) / StandardDeviation.Cub()
+        AsymmetryCoefficient = standardDeviationCub != 0
+            ? WithCentralMoment(3) / StandardDeviation.Cub()
             : 0;
         return this;
     }
@@ -208,16 +213,32 @@ public class Statistic
     public Statistic WithKurtosisCoefficient()
     {
         var varianceSqr = Variance.Sqr();
-        KurtosisCoefficient = varianceSqr != 0 
-            ? WithCentralMoment(4) / Variance.Sqr() - 3 
+        KurtosisCoefficient = varianceSqr != 0
+            ? WithCentralMoment(4) / Variance.Sqr() - 3
             : 0;
-        
+
         return this;
     }
 
-    public static Statistic WithAllParams(IReadOnlyCollection<double> selection)
+    public Statistic WithConfidenceIntervalGeneralMean(double probability = .95)
     {
-        return CreateBy(selection)
+        var delta = StudentT.InvCDF(0, 1, DegreesFreedomCount, (probability + 1) / 2) * StandardDeviation /
+                    Sqrt(ElementsCount);
+        GeneralMean = new ConfidenceInterval(Mean - delta, Mean + delta);
+        return this;
+    }
+
+    public Statistic WithConfidenceIntervalGeneralStandardDeviation(double probability = .95)
+    {
+        var right = ChiSquared.InvCDF(DegreesFreedomCount, (1 - probability) / 2);
+        var left = ChiSquared.InvCDF(DegreesFreedomCount, (1 + probability) / 2);
+        var multiplier = DegreesFreedomCount * Variance;
+        GeneralStandardDeviation = new ConfidenceInterval(multiplier / left, multiplier / right);
+        return this;
+    }
+
+    public static Statistic WithAllParams(IReadOnlyCollection<double> selection, double probability = .95)
+        => CreateBy(selection)
             .WithMin()
             .WithMax()
             .WithSturgess()
@@ -229,6 +250,7 @@ public class Statistic
             .WithMode()
             .WithMedian()
             .WithKurtosisCoefficient()
-            .WithAsymmetryCoefficient();
-    }
+            .WithAsymmetryCoefficient()
+            .WithConfidenceIntervalGeneralMean(probability)
+            .WithConfidenceIntervalGeneralStandardDeviation(probability);
 }
