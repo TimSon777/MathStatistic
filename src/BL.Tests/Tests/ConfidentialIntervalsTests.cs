@@ -24,7 +24,7 @@ public class ConfidentialIntervalsTests
         var selection = Data.Sets[indexDataSet];
         var statistic = Statistic.WithAllParams(selection);
 
-        Assert.True(statistic.GeneralStandardDeviation.Left >= expectedMinLeft &&
-                    statistic.GeneralStandardDeviation.Right <= expectedMaxRight);
+        Assert.True(statistic.GeneralVariance.Left >= expectedMinLeft &&
+                    statistic.GeneralVariance.Right <= expectedMaxRight);
     }
 }

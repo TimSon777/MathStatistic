@@ -23,7 +23,7 @@ public class Statistic
     public double AsymmetryCoefficient { get; private set; }
     public double KurtosisCoefficient { get; private set; }
     public ConfidenceInterval GeneralMean { get; private set; }
-    public ConfidenceInterval GeneralStandardDeviation { get; private set; }
+    public ConfidenceInterval GeneralVariance { get; private set; }
     private int DegreesFreedomCount => ElementsCount - 1;
 
     private Statistic(IReadOnlyCollection<double> selection)
@@ -228,12 +228,12 @@ public class Statistic
         return this;
     }
 
-    public Statistic WithConfidenceIntervalGeneralStandardDeviation(double probability = .95)
+    public Statistic WithConfidenceIntervalGeneralVariance(double probability = .95)
     {
         var right = ChiSquared.InvCDF(DegreesFreedomCount, (1 - probability) / 2);
         var left = ChiSquared.InvCDF(DegreesFreedomCount, (1 + probability) / 2);
         var multiplier = DegreesFreedomCount * Variance;
-        GeneralStandardDeviation = new ConfidenceInterval(multiplier / left, multiplier / right);
+        GeneralVariance = new ConfidenceInterval(multiplier / left, multiplier / right);
         return this;
     }
 
@@ -252,5 +252,5 @@ public class Statistic
             .WithKurtosisCoefficient()
             .WithAsymmetryCoefficient()
             .WithConfidenceIntervalGeneralMean(probability)
-            .WithConfidenceIntervalGeneralStandardDeviation(probability);
+            .WithConfidenceIntervalGeneralVariance(probability);
 }

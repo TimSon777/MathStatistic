@@ -7,11 +7,11 @@ namespace Desktop.Controllers;
 
 public class DataController : Controller
 {
-    private ICsvHelper CsvHelper { get; set; }
+    private readonly ICsvHelper _csvHelper;
 
     public DataController(ICsvHelper csvHelper)
     {
-        CsvHelper = csvHelper;
+        _csvHelper = csvHelper;
     }
 
     [HttpGet]
@@ -28,7 +28,7 @@ public class DataController : Controller
             .Select(int.Parse)
             .ToArray();
         
-       var data = await CsvHelper.ReadFileAsync(pathToFile, separator, columnsArray);
+       var data = await _csvHelper.ReadFileAsync(pathToFile, separator, columnsArray);
        var result = data.Select(x => Statistic.WithAllParams(x, probability));
        return View(result);
     }

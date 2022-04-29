@@ -29,13 +29,12 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-//Task.Run(async () => await Electron.WindowManager.CreateWindowAsync());
-//var display = await Electron.Screen.GetPrimaryDisplayAsync();
+var display = await Electron.Screen.GetPrimaryDisplayAsync();
 
-/*await Task.Run(async () => await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions
+await Task.Run(async () => await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions
 {
     Width = display.Size.Width,
     Height = display.Size.Height
-}));*/
+}));
 
 app.Run();

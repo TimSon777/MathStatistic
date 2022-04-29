@@ -3,194 +3,152 @@
 @model IEnumerable<Statistic>
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "Statistic";
     Layout = "_Layout";
     var i = 0;
 }
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
-<script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript"></script>
 
-function GetTableData(tableId, columnNumber){
-  let myTableArray = [];
-  
-  $(`table#${tableId} tr`).each(function() {
-    console.log($(this).find('td')[0]);
-      let value = $(this).find('td')[columnNumber].text();
-      myTableArray.push(value);
-     
-  });
-  
-  return myTableArray;
-}
-
-function DrawGistogram(id, data){
-    let ctx = document.getElementById(id).getContext('2d');
-    let myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            datasets: [{
-                label: 'Life expectancy',
-                data: data,
-                backgroundColor: [
-                    'rgba(216, 27, 96, 0.6)',
-                    'rgba(3, 169, 244, 0.6)',
-                    'rgba(255, 152, 0, 0.6)',
-                    'rgba(29, 233, 182, 0.6)',
-                    'rgba(156, 39, 176, 0.6)',
-                    'rgba(84, 110, 122, 0.6)'
-                ],
-                borderColor: [
-                    'rgba(216, 27, 96, 1)',
-                    'rgba(3, 169, 244, 1)',
-                    'rgba(255, 152, 0, 1)',
-                    'rgba(29, 233, 182, 1)',
-                    'rgba(156, 39, 176, 1)',
-                    'rgba(84, 110, 122, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            legend: {
-                display: false
-            },
-            title: {
-                display: true,
-                text: 'Life Expectancy by Country',
-                position: 'top',
-                fontSize: 16,
-                padding: 20
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        min: 0
-                    }
-                }]
-            }
-        }
+<script >
+function DrawHistogram(id, Data) {
+    google.charts.load("current", {packages:["corechart"]});
+    google.charts.setOnLoadCallback(() => {
+        const data = google.visualization.arrayToDataTable(Data);
+        const options = {
+          title: 'Histogram',
+          legend: { position: 'none' },
+        };
+        
+        const chart = new google.visualization.Histogram(document.getElementById(id));
+        chart.draw(data, options);
     });
 }
 </script>
 
 @foreach (var statistic in Model)
 {
-  <div class="mb-5" style="display: flex; flex-wrap: wrap; justify-content: space-between; border-bottom: 2px solid coral">
-    <div class="table-responsive">
-      <table class="table table-sm" id="table-@i">
-        <thead>
-        <tr class="table-headers">
-          <th scope="col">Interval start</th>
-          <th scope="col">Interval end</th>
-          <th scope="col">Middle</th>
-          <th scope="col">Frequency</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var interval in statistic.Intervals)
-        {
-          <tr>
-            <td>@Math.Round(interval.Left, 2)</td>
-            <td>@Math.Round(interval.Right, 2)</td>
-            <td>@Math.Round(interval.Middle, 2)</td>
-            <td>@interval.Frequency</td>
-          </tr>
+    <div class="mb-5" style="display: flex; flex-wrap: wrap; justify-content: space-between; border-bottom: 2px solid coral">
+        <div class="table-responsive" style="min-width: 45%">
+            <table class="table table-sm" id="table-@i">
+                <thead>
+                <tr class="table-headers">
+                    <th scope="col">Interval start</th>
+                    <th scope="col">Interval end</th>
+                    <th scope="col">Middle</th>
+                    <th scope="col">Frequency</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var interval in statistic.Intervals)
+                {
+                    <tr>
+                        <td>@Math.Round(interval.Left, 2)</td>
+                        <td>@Math.Round(interval.Right, 2)</td>
+                        <td>@Math.Round(interval.Middle, 2)</td>
+                        <td>@interval.Frequency</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="common-results table-responsive" style="min-width: 45%">
+            <table class="table table-sm">
+                <thead>
+                <tr class="table-headers">
+                    <th scope="col">Characteristic</th>
+                    <th scope="col">Result</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Elements count</td>
+                    <td>@statistic.ElementsCount</td>
+                </tr>
+                <tr>
+                    <td>Min</td>
+                    <td>@statistic.Min</td>
+                </tr>
+                <tr>
+                    <td>Max</td>
+                    <td>@statistic.Max</td>
+                </tr>
+                <tr>
+                    <td>Mean</td>
+                    <td>@Math.Round(statistic.Mean, 2)</td>
+                </tr>
+                <tr>
+                    <td>Standard deviation</td>
+                    <td>@Math.Round(statistic.StandardDeviation, 2)</td>
+                </tr>
+                <tr>
+                    <td>Interval width</td>
+                    <td>@statistic.IntervalWidth</td>
+                </tr>
+                <tr>
+                    <td>Variance</td>
+                    <td>@Math.Round(statistic.Variance, 2)</td>
+                </tr>
+                <tr>
+                    <td>Mode</td>
+                    <td>@Math.Round(statistic.Mode, 2)</td>
+                </tr>
+                <tr>
+                    <td>Median</td>
+                    <td>@Math.Round(statistic.Median, 2)</td>
+                </tr>
+                <tr>
+                    <td>Asymmetry coefficient</td>
+                    <td>@Math.Round(statistic.AsymmetryCoefficient, 2)</td>
+                </tr>
+                <tr>
+                    <td>Kurtosis coefficient</td>
+                    <td>@Math.Round(statistic.KurtosisCoefficient, 2)</td>
+                </tr>
+                <tr>
+                    <td>Confidential interval for general mean</td>
+                    <td>@Math.Round(statistic.GeneralMean.Left, 2) - @Math.Round(statistic.GeneralMean.Right, 2)</td>
+                </tr>
+                <tr>
+                    <td>Confidential interval for general variance</td>
+                    <td>@Math.Round(statistic.GeneralVariance.Left, 2) - @Math.Round(statistic.GeneralVariance.Right, 2)</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="conclusions mb-2" style="border-bottom: 1px solid coral; min-width: 45%">
+            @foreach (var line in statistic.WriteConclusionAsText())
+            {
+                <p>
+                    @line
+                </p>
+            }
+        </div>
+
+        <div class="cont" style="outline: 1px solid red; min-width: 45%">
+            <div id="chart-@i"></div>
+        </div>
+
+        <script>
+            DrawHistogram("chart-" + @i.ToString(), 
+            [["Middle"], 
+            @foreach (var interval in statistic.Intervals)
+            {
+                for (var j = 0; j < interval.Frequency; j++)
+                {
+                    @($"[{interval.Middle.ToString(CultureInfo.InvariantCulture)}],")
+                }
+            }]);
+        </script>
+
+        @{
+            i++;
         }
-        </tbody>
-      </table>
-    </div>
 
-    <div class="common-results table-responsive">
-      <table class="table table-sm">
-        <thead>
-        <tr class="table-headers">
-          <th scope="col">Characteristic</th>
-          <th scope="col">Result</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td>Elements count</td>
-          <td>@statistic.ElementsCount</td>
-        </tr>
-        <tr>
-          <td>Min</td>
-          <td>@statistic.Min</td>
-        </tr>
-        <tr>
-          <td>Max</td>
-          <td>@statistic.Max</td>
-        </tr>
-        <tr>
-          <td>Mean</td>
-          <td>@Math.Round(statistic.Mean, 2)</td>
-        </tr>
-        <tr>
-          <td>Standard deviation</td>
-          <td>@Math.Round(statistic.StandardDeviation, 2)</td>
-        </tr>
-        <tr>
-          <td>Interval width</td>
-          <td>@statistic.IntervalWidth</td>
-        </tr>
-        <tr>
-          <td>Variance</td>
-          <td>@Math.Round(statistic.Variance, 2)</td>
-        </tr>
-        <tr>
-          <td>Mode</td>
-          <td>@Math.Round(statistic.Mode, 2)</td>
-        </tr>
-        <tr>
-          <td>Median</td>
-          <td>@Math.Round(statistic.Median, 2)</td>
-        </tr>
-        <tr>
-          <td>Asymmetry coefficient</td>
-          <td>@statistic.AsymmetryCoefficient</td>
-        </tr>
-        <tr>
-          <td>Kurtosis coefficient</td>
-          <td>@statistic.KurtosisCoefficient</td>
-        </tr>
-        </tbody>
-      </table>
     </div>
-
-    <div class="conclusions mb-2" style="border-bottom: 1px solid coral">
-      @foreach (var line in statistic.WriteConclusionAsText())
-      {
-        <p>
-          @line 
-        </p>
-      }
-      
-    </div>
-    
-    
-    <div class="cont" style="outline: 1px solid red">
-         <canvas id="chart-@i" width="400" height="200"></canvas>
-    </div>
-    
-    
-    
-    <script>
-
-      DrawGistogram("chart-" + @i.ToString(), [@foreach (var obj in statistic.Intervals)
-                                                                                           {
-                                                                                             @($"{{ x: {obj.Middle.ToString("0.000", CultureInfo.InvariantCulture)}, y: {obj.Frequency.ToString("0.000", CultureInfo.InvariantCulture)} }},")
-                                                                                           }]);
-      
-    </script>
-    
-    @{ i++;}
-    
-  </div>
 }
-
-
-
-
